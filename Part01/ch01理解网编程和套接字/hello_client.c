@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    sock = socket(PF_INET, SOCK_STREAM, 0); // 创 建套接字,但此时套接字并不马上分为服务器端和客户端。
+    sock = socket(PF_INET, SOCK_STREAM, 0); // 创建套接字,但此时套接字并不马上分为服务器端和客户端。
     if (sock == -1)
     {
         error_handing("socket() error");

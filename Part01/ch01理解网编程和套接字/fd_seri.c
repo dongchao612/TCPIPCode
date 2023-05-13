@@ -19,7 +19,7 @@ int main()
     printf("file descriptor 1 : %d\n", fd1);
     printf("file descriptor 2 : %d\n", fd2);
     printf("file descriptor 3 : %d\n", fd3);
-    
+
     close(fd1);
     close(fd2);
     close(fd3);

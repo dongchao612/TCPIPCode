@@ -16,6 +16,6 @@ int main()
     printf("Network ordered port : %#x \n", net_port);
     printf("host ordered address : %#lx \n", host_addr);
     printf("Network ordered address : %#lx \n", net_addr);
-    
+
     return 0;
 }

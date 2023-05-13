@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     clnt_addr_size = sizeof(clnt_addr);
-    
+
     clnt_sock = accept(serv_sock, (sockaddr *)&clnt_addr, &clnt_addr_size); // 调用 accept 函数受理连接请求。如果在没有连接请求的情况下调用该函数,则不会返回,直到有连接请求为止。
     if (clnt_sock == -1)
     {
