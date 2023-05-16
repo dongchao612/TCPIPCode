@@ -5,6 +5,10 @@
 
 typedef struct sockaddr_in sockaddr_in;
 
+/*
+测试函数inet_ntoa  将网络地址转成字符串IP
+*/
+
 int main()
 {
     sockaddr_in addr1, addr2;

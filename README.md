@@ -93,23 +93,23 @@ IPv4标准的4字节F地址分为网络地址和主机(指计算机)地址, 且�
 ```c
 struct sockaddr_in
 {
-    sa_family_t sin_family              // 地址族
+    sa_family_t sin_family              // 地址族 ->> unsigned short int 
     // AF_INET IPv4网络协议中使用的地址族
     // AF_INET6 IPv6网络协议中使用的地址族
-    uint16_t sin_port;			// 16位TCP/UDP端口号 
-    struct in_addr sin_addr;		// 32为IP地址  
+    in_port_t sin_port;			// 16位TCP/UDP端口号   ->> uint16_t
+    struct in_addr sin_addr;		// 32为IP地址  ->> uint32_t
 
     char sin_zero[9]                    // 不使用
 };
 
 struct in_addr
 {
-    In_addr_t s_addr;                   //32位IPv4地址
+    In_addr_t s_addr;                   //32位IPv4地址 ->> uint32_t
 };
 
 struct sockaddr
 {
-    sa_family_t sin_family              // 地址族
+    sa_family_t sin_family              // 地址族 ->> unsigned short int 
     char sa_data[14];		        // 地址信息
 };
 ````
@@ -189,10 +189,11 @@ int bind(int sockfd ,struct sockaddr *myaddr,socklen_t addrlen);
 int serv_sock;
 struct sockaddr_in serv_addr;
 char *serv_port = "9190";
+
 /* 创建服务器端套接字(监听套接字) */
 serv_sock = socket(PF_INET, SOCK_STREAM, 0);
-/* 地址信息初始化 */
 
+/* 地址信息初始化 */
 memset(&serv_addr, 0, sizeof(serv_addr));
 serv_addr.sin_family = AF_INET;
 serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -203,3 +204,75 @@ bind(serv_sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr));
 
 /*******/
 ```
+
+### ch04 基于TCP的服务器端/客户端(1)
+
+#### 理解 TCP和UDP
+
+> TCP 链路层 IP层 TCP层 应用层
+> UDP 链路层 IP层 UDP层 应用层
+
+##### 链路层
+
+链路层是物理链接领域标准化的结果,也是最基本的领域专 门定义LAN 、 WAN 、 MAN等网络标准。
+
+##### IP层
+
+IP本身是面向消息的 、不可靠的协议。 每次传输数据时会帮我们选择路径,但并不 一致 。 如果传输中发生路径错误, 则选择其他路径;但如果发生数据丢失或错误,则无法解决。
+
+##### TCP和UDP层
+IP层只关注 1 个数据包(数据传输的基本单位)的传输过程 。 因此,即使传输多个数据包每个数据包也是由 IP层实际传输的,也就是说传输顺序及传输本身是不可靠的 。 若只利用 IP层传输数据,则有可能导致后传输的数据包B 比先传输的数据包A提早到达 。 另外,传输的数据包A、B 、 C中有可能只收到A和 C ,甚至收到的 C可能已损毁 。 反之,若添加TCP协议则按照如下对话方式进行数据交换 。
+
+##### 应用层
+
+TCP服务器端的默认函数调用顺序
+> sockte() 创建套接字
+> bind() 分配套接字地址
+> listen() 等待连接请求
+> accept() 允许连接
+> read()/read() 数据交换
+> close() 关闭连接
+
+
+进入等待连接请求状态
+```c
+# include <sys/socket.h>
+int listen (int __fd, int __n);
+// 成功时返回 0 ,失败时返回 -1
+// __fd 希望进入等待连接请求状态的套接字文件描述符
+//  __n 接请求等待队列的长度
+```
+受理客户端连接请求
+调用 listen 函数后,若有新的连接请求,则应按序受理 。 受理请求意味着进入可接受数据的状态
+```c
+ int accept (int __fd, __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len);
+// 成功时返回创建的套接字文件描述符,失败时返回-1
+// __fd 服务器套接 字的 文件描述符
+// __addr 保存发起连接请求的客户端地址信息的变量地址值,调用函数后向传递来的地址变量参数值填充客户端地址信息 。
+// __addr_len 第二个参数的长度 完成调用后被填充
+```
+TCP客户端的默认函数调用顺序
+> sockte() 创建套接字
+> connect() 请求连接
+> read()/read() 数据交换
+> close() 关闭连接
+
+请求连接
+与服务器端相 比, 区别就在于请求连接，它是创建客户端套接字后向服务器端发起的连
+接请求 。 服务器端调用 listen 函数后创建连接请求等待队列,之后客户端即可请求连接 。 那如何发起连接请求呢?通过调用如下函数完成 。
+
+```c
+int connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len);
+// 成功时返回 0 ,失败时返回 -1
+// __fd 客户端套接字文件描述符
+//  __addr目标服务器地址信息的变量地址值
+// __len 第二个参数的长度
+```
+客户端调用 connect函数后,发生以下情况之一才会返回(完成函数调用)。
+- 服务器端接收连接请求 。
+- 发生断网等异常情况而中断连接请求 。
+
+目前有的问题
+- 客户端输入字符串长度受限
+- 客户端断开后 服务器端没有及时的将连接数相应的减少
+- 客户端结束进程 服务器端仍在连接

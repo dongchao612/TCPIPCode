@@ -7,6 +7,10 @@ void error_handing(char *message);
 
 typedef struct sockaddr_in sockaddr_in;
 
+/*
+测试函数  inet_aton 将字符串IP转成网络地址
+*/
+
 int main()
 {
     char *addr = "127.232.124.79";
@@ -18,7 +22,7 @@ int main()
     }
     else
     {
-        printf("Network orderd integer addr :%#x \n", addr_inet.sin_addr.s_addr);
+        printf("Network orderd integer addr :%#x \n", addr_inet.sin_addr.s_addr); //0x4f7ce87f 
     }
 }
 
