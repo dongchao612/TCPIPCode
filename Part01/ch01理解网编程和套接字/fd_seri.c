@@ -13,7 +13,7 @@ int main()
 {
     int fd1, fd2, fd3;
     fd1 = socket(PF_INET, SOCK_STREAM, 0);
-    fd2 = open("test.dat", O_CREAT | O_WRONLY, O_TRUNC);
+    fd2 = open("test.txt", O_CREAT | O_WRONLY, O_TRUNC);
     fd3 = socket(PF_INET, SOCK_DGRAM, 0);
 
     printf("file descriptor 1 : %d\n", fd1);
@@ -23,5 +23,6 @@ int main()
     close(fd1);
     close(fd2);
     close(fd3);
+    
     return 0;
 }

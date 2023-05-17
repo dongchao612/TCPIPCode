@@ -6,6 +6,8 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+#define BUF_SIZE 5
+
 void error_handing(char *meeeage);
 
 typedef struct sockaddr_in sockaddr_in;
@@ -13,17 +15,14 @@ typedef struct sockaddr sockaddr;
 
 int main(int argc, char *argv[])
 {
+    int serv_sock, clnt_sock;
+    char message[BUF_SIZE];
+    memset(message,0,BUF_SIZE);
+    int str_len, i;
 
-    int serv_sock;
-    int clnt_sock;
+    sockaddr_in serv_addr, clnt_addr;
 
-    int write_len = 0;
-
-    sockaddr_in serv_addr;
-    sockaddr_in clnt_addr;
     socklen_t clnt_addr_size;
-
-    char message[] = "hello world!";
 
     if (argc != 2)
     {
@@ -37,6 +36,7 @@ int main(int argc, char *argv[])
         error_handing("socket() error");
     }
 
+    // 初始化结构体
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family - AF_INET;
     serv_addr.sin_addr.s_addr = htons(INADDR_ANY);
@@ -53,21 +53,36 @@ int main(int argc, char *argv[])
     }
 
     clnt_addr_size = sizeof(clnt_addr);
-
-    clnt_sock = accept(serv_sock, (sockaddr *)&clnt_addr, &clnt_addr_size); // 调用 accept 函数受理连接请求。如果在没有连接请求的情况下调用该函数,则不会返回,直到有连接请求为止。
-    if (clnt_sock == -1)
+    for (i = 0; i < 5; i++)
     {
-        error_handing("accept() error");
+        clnt_sock = accept(serv_sock, (sockaddr *)&clnt_addr, &clnt_addr_size); // 调用 accept 函数受理连接请求。如果在没有连接请求的情况下调用该函数,则不会返回,直到有连接请求为止。
+        if (clnt_sock == -1)
+        {
+            error_handing("accept() error");
+        }
+        else
+        {
+            printf("Connected cliend %d \n", i + 1);
+        }
+
+        while ((str_len = read(clnt_sock, message, BUF_SIZE) )!= 0)
+        {
+
+            if (str_len == -1)
+            {
+                error_handing("read() error");
+            }
+            write(clnt_sock, message, str_len);
+
+        }
+        close(clnt_sock);
     }
 
-    write_len = write(clnt_sock, message, sizeof(message)); // 稍后将要介绍的 write 函数用 于传输数据
-    printf("Write : %d\n", write_len);
-
-    close(clnt_sock);
     close(serv_sock);
 
     return 0;
 }
+
 void error_handing(char *message)
 {
     fputs(message, stderr);

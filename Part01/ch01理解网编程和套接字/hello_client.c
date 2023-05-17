@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     int sock;
     sockaddr_in serv_addr;
     char message[30];
-    int str_len;
+    int read_len;
 
     if (argc != 3)
     {
@@ -40,13 +40,15 @@ int main(int argc, char *argv[])
         error_handing("connect() error");
     }
 
-    str_len = read(sock, message, sizeof(message) - 1);
+    read_len = read(sock, message, sizeof(message) - 1);
 
-    if (str_len == -1)
+    if (read_len == -1)
     {
         error_handing("read() error");
     }
 
+    printf("Read : %d\n",read_len);
+    
     printf("Message from server : %s \n", message);
     close(sock);
 

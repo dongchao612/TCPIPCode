@@ -4,6 +4,9 @@
         "types.h": "c",
         "fcntl.h": "c",
         "limits": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "*.tcc": "c",
+        "system_error": "c",
+        "algorithm": "c"
     }
 }

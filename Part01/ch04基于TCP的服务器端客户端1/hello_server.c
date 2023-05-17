@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     int serv_sock;
     int clnt_sock;
 
+    int write_len = 0;
+
     sockaddr_in serv_addr;
     sockaddr_in clnt_addr;
     socklen_t clnt_addr_size;
@@ -35,7 +37,7 @@ int main(int argc, char *argv[])
         error_handing("socket() error");
     }
 
-    //初始化结构体
+    // 初始化结构体
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family - AF_INET;
     serv_addr.sin_addr.s_addr = htons(INADDR_ANY);
@@ -59,7 +61,8 @@ int main(int argc, char *argv[])
         error_handing("accept() error");
     }
 
-    write(clnt_sock, message, sizeof(message)); // 稍后将要介绍的 write 函数用 于传输数据
+    write_len = write(clnt_sock, message, sizeof(message)); // 稍后将要介绍的 write 函数用 于传输数据
+    printf("Write : %d\n", write_len);
 
     close(clnt_sock);
     close(serv_sock);

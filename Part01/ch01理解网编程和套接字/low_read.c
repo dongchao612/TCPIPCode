@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -14,7 +15,9 @@ void error_handing(char *message);
 int main(void)
 {
     int fd;
-    char buf[BUF_SIZE];
+    char buf[BUF_SIZE]; // 100个字节, 0个可见字符
+    printf("%d\t%d\n", sizeof(buf), strlen(buf));
+
     fd = open("data.txt", O_RDONLY);
     if (fd == -1)
     {
@@ -22,10 +25,16 @@ int main(void)
     }
     printf("file descriptor : %d\n", fd);
 
-    if (read(fd, buf, sizeof(buf)) == -1)
+
+        int read_cnt=0;
+    if ((read_cnt=  (fd, buf, sizeof(buf)) )== -1) // 一次性读100字节到buf里面，但是只有13个字节
     {
         error_handing("read() error!");
     }
+    puts(buf);
+    printf("%d\n",read_cnt);
+    printf("%d\t%d\n", sizeof(buf), strlen(buf)); // 100个字节, 12个可见字符
+
     close(fd);
     return 0;
 }

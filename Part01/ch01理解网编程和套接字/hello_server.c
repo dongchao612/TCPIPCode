@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
     int serv_sock; // 服务器套接字
     int clnt_sock; // 客户端套接字
 
+    int write_len=0;
+
     sockaddr_in serv_addr; // 服务器地址
     sockaddr_in clnt_addr; // 客户端地址
     socklen_t clnt_addr_size;
@@ -59,8 +61,9 @@ int main(int argc, char *argv[])
         error_handing("accept() error");
     }
 
-    write(clnt_sock, message, sizeof(message)); // 稍后将要介绍的 write 函数用 于传输数据
-
+    write_len = write(clnt_sock, message, sizeof(message)); // 稍后将要介绍的 write 函数用 于传输数据
+    printf("Write : %d\n",write_len);
+    
     close(clnt_sock);
     close(serv_sock);
 

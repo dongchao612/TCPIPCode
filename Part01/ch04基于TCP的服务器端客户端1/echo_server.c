@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define BUF_SIZE 1024
+#define BUF_SIZE 5
 
 void error_handing(char *meeeage);
 
@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
 {
     int serv_sock, clnt_sock;
     char message[BUF_SIZE];
-    int str_len, i;
+    memset(message, 0, BUF_SIZE);
+
+    int write_len,str_len, i;
 
     sockaddr_in serv_addr, clnt_addr;
 
@@ -64,13 +66,17 @@ int main(int argc, char *argv[])
             printf("Connected cliend %d \n", i + 1);
         }
 
-        while ((str_len = read(clnt_sock, message, BUF_SIZE) )!= 0)
+        while ((str_len = read(clnt_sock, message, BUF_SIZE)) != 0)
         {
+
             if (str_len == -1)
             {
                 error_handing("read() error");
             }
-            write(clnt_sock, message, str_len);
+
+            printf("Read : %d\n", str_len);
+            write_len = write(clnt_sock, message, str_len);
+            printf("Write : %d\n", write_len);
         }
         close(clnt_sock);
     }

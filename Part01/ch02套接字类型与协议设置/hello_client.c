@@ -16,8 +16,8 @@ int main(int argc, char *argv[])
     int sock;
     sockaddr_in serv_addr;
     char message[30];
-    int str_len = 0;
-    int idx = 0, read_len = 0;
+    int read_len = 0;
+    int idx = 0, read_cnt= 0;
 
     if (argc != 3)
     {
@@ -41,17 +41,18 @@ int main(int argc, char *argv[])
         error_handing("connect() error");
     }
 
-    while (read_len = read(sock, &message[idx++], 1))
+    while (read_cnt= read(sock, &message[idx++], 1))
     {
-        if (read_len == -1)
+        if (read_cnt == -1)
         {
             error_handing("read() error");
         }
-        str_len += read_len;
+        read_len += read_cnt;
     }
 
+    printf("Read : %d\n",read_len);
     printf("Message from server : %s \n", message);
-    printf("Function read all call count : %d\n", str_len);
+    
     close(sock);
 
     return 0;

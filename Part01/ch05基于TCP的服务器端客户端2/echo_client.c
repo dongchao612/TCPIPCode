@@ -6,6 +6,8 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
+#define BUF_SIZE 5
+
 void error_handing(char *meeeage);
 
 typedef struct sockaddr_in sockaddr_in;
@@ -14,10 +16,11 @@ typedef struct sockaddr sockaddr;
 int main(int argc, char *argv[])
 {
     int sock;
+    int write_len=0;
+    char message[BUF_SIZE];
+
+    int str_len = 0,recv_len=0,recv_cnt=0;
     sockaddr_in serv_addr;
-    char message[30];
-    int read_cnt = 0;
-    int idx = 0, read_len = 0;
 
     if (argc != 3)
     {
@@ -40,18 +43,39 @@ int main(int argc, char *argv[])
     {
         error_handing("connect() error");
     }
-
-    while (read_cnt = read(sock, &message[idx++], 1))
+    else
     {
-        if (read_cnt == -1)
-        {
-            error_handing("read() error");
-        }
-        read_len += read_cnt;
+        puts("Connected..........");
     }
 
-    printf("Read : %d\n",read_len);
-    printf("Message from server : %s \n", message);
+    while (1)
+    {
+        fputs("\nInput message(Q to quit):",stdout);
+        fgets(message,BUF_SIZE,stdin);
+        if((!strcmp(message,"q\n"))||!(strcmp(message,"Q\n")))
+        {
+            break;
+        }
+
+        write_len=write(sock,message,strlen(message));
+        
+
+        recv_len=0;
+        while (recv_len<write_len)
+        {
+            printf("Write : %d\t Recv : %d\n",write_len,recv_len);
+            recv_cnt=read(sock,&message[recv_len],BUF_SIZE-1);
+            if(recv_cnt==-1)
+            {
+                error_handing("read() error");
+            }
+            recv_len+=recv_cnt;
+        }
+        
+        message[recv_len]=0;
+        printf(" Read : %d\n",recv_len);
+        printf("Message from server: %s",message);
+    }
 
     close(sock);
 

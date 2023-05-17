@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define BUF_SIZE 1024
+#define BUF_SIZE 5
 
 void error_handing(char *meeeage);
 
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     char message[BUF_SIZE];
 
-    int str_len = 0;
+    int write_cnt, read_len = 0;
     sockaddr_in serv_addr;
 
     if (argc != 3)
@@ -50,17 +50,31 @@ int main(int argc, char *argv[])
 
     while (1)
     {
-        fputs("\nInput message(Q to quit):",stdout);
-        fgets(message,BUF_SIZE,stdin);
-        if((!strcmp(message,"q\n"))||!(strcmp(message,"Q\n")))
+        fputs("\nInput message(Q to quit):", stdout);
+        fgets(message, BUF_SIZE, stdin);
+        // 读取 (n-1) 个字符时，或者读取到换行符时，或者到达文件末尾时，它会停止，具体视情况而定
+        // fgets()的字符串结尾既包含'\0'又包含'\n'
+        if ((!strcmp(message, "q\n")) || !(strcmp(message, "Q\n")))
         {
             break;
         }
-        write(sock,message,strlen(message));
-        str_len=read(sock,message,BUF_SIZE-1);
-        message[str_len]=0;
+        /*
+        123ENTER  4个字符 加上尾0  
+         */
+        write_cnt = write(sock, message, strlen(message));// 只有3个可见字符 写入了123ENTER
+        printf("Write : %d\n", write_cnt);
 
-        printf("Message from server: %s",message);
+        read_len = read(sock, message, BUF_SIZE );
+
+        // message[read_len] = 0;
+
+        if (read_len == -1)
+        {
+            error_handing("read() error");
+        }
+
+        printf("Read : %d\n", read_len);
+        printf("Message from server: %s", message);
     }
 
     close(sock);
