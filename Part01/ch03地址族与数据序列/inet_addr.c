@@ -10,10 +10,7 @@ int main()
     char *addr1 = "1.2.3.4";
     char *addr2 = "1.2.3.256";
 
-    // unsigned long conv_addr = inet_addr(addr1);
-
-    in_addr_t conv_addr = inet_addr(addr1); //uint32_t  unsigned int 
-    
+    unsigned long conv_addr = inet_addr(addr1);
     if (conv_addr == INADDR_NONE)
     {
         printf("error occured!\n");
@@ -23,7 +20,7 @@ int main()
         printf("Network orderd integer addr :%#lx \n", conv_addr);// 0x4030201 
     }
 
-    conv_addr = inet_addr(addr2);
+    conv_addr = inet_addr(addr2); //error occured!
     if (conv_addr == INADDR_NONE)
     {
         printf("error occured!\n");

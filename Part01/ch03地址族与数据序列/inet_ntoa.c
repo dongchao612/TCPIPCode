@@ -20,12 +20,12 @@ int main()
 
     str_ptr = inet_ntoa(addr1.sin_addr);
     strcpy(str_arr, str_ptr);
-    printf("Dotted-Decimal notation1 %s \n", str_ptr);
+    printf("Dotted-Decimal notation1 %s \n", str_ptr); // 1 1.2.3.4 
 
     inet_ntoa(addr2.sin_addr);
     strcpy(str_arr, str_ptr);
-    printf("Dotted-Decimal notation2 %s \n", str_ptr);
-    printf("Dotted-Decimal notation2 %s \n", str_arr);
+    printf("Dotted-Decimal notation2 %s \n", str_ptr); // 2 1.1.1.1 
+    printf("Dotted-Decimal notation2 %s \n", str_arr); // 2 1.1.1.1 
 
     return 0;
 }

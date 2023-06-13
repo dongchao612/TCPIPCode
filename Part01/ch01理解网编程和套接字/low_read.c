@@ -16,7 +16,6 @@ int main(void)
 {
     int fd;
     char buf[BUF_SIZE]; // 100个字节, 0个可见字符
-    printf("%d\t%d\n", sizeof(buf), strlen(buf));
 
     fd = open("data.txt", O_RDONLY);
     if (fd == -1)
@@ -25,17 +24,14 @@ int main(void)
     }
     printf("file descriptor : %d\n", fd);
 
-
-        int read_cnt=0;
-    if ((read_cnt=  (fd, buf, sizeof(buf)) )== -1) // 一次性读100字节到buf里面，但是只有13个字节
+    if (read(fd, buf, sizeof(buf)) == -1) // 一次性读100字节到buf里面，但是只有13个字节
     {
         error_handing("read() error!");
     }
-    puts(buf);
-    printf("%d\n",read_cnt);
-    printf("%d\t%d\n", sizeof(buf), strlen(buf)); // 100个字节, 12个可见字符
+    printf("file data:%s", buf);
 
     close(fd);
+    
     return 0;
 }
 

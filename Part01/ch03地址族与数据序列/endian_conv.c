@@ -9,11 +9,11 @@
 */
 int main()
 {
-    uint16_t host_port = 0x1234; //  unsigned short int 【unsigned short 】
-    uint16_t net_port;
+    unsigned short host_port = 0x1234; 
+    unsigned short  net_port;
 
-    uint32_t host_addr = 0x12345678; // unsigned int【unsigned short 】
-    uint32_t net_addr;
+    unsigned int host_addr = 0x12345678; 
+    unsigned int net_addr;
 
     net_port = htons(host_port);                       // 把short型数据从主机字节序转化为网络字节序
     printf("host ordered port : %#x \n", host_port);   // 0x1234
