@@ -13,10 +13,12 @@ typedef struct sockaddr sockaddr;
 
 int main(int argc, char *argv[])
 {
-    int sock;
-    sockaddr_in serv_addr;
+    int clnt_sock;         // 客户端套接字
+    sockaddr_in serv_addr; // 客户端地址
+
     char message[30];
-    int read_cnt = 0;
+    int str_len=0;
+
     int idx = 0, read_len = 0;
 
     if (argc != 3)
@@ -25,8 +27,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    sock = socket(PF_INET, SOCK_STREAM, 0); // 创 建套接字,但此时套接字并不马上分为服务器端和客户端。
-    if (sock == -1)
+    clnt_sock = socket(PF_INET, SOCK_STREAM, 0); // 创建套接字,但此时套接字并不马上分为服务器端和客户端。
+    if (clnt_sock == -1)
     {
         error_handing("socket() error");
     }
@@ -36,24 +38,25 @@ int main(int argc, char *argv[])
     serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
     serv_addr.sin_port = (atoi(argv[2]));
 
-    if (connect(sock, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) // 调用 connect函数向服务器端发送连接请求。
+    if (connect(clnt_sock, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) // 调用 connect函数向服务器端发送连接请求。
     {
         error_handing("connect() error");
     }
 
-    while (read_cnt = read(sock, &message[idx++], 1))
+    while (read_len = read(clnt_sock, &message[idx++], 1))
     {
-        if (read_cnt == -1)
+        if (read_len == -1)
         {
             error_handing("read() error");
         }
-        read_len += read_cnt;
+        str_len += read_len;
     }
 
-    printf("Read : %d\n",read_len);
-    printf("Message from server : %s \n", message);
 
-    close(sock);
+    printf("Message from server : %s \n", message);
+    printf("Function read acll count : %d \n", str_len);
+
+    close(clnt_sock);
 
     return 0;
 }
