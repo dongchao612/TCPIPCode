@@ -8,6 +8,7 @@
         "*.tcc": "c",
         "system_error": "c",
         "algorithm": "c",
-        "inet.h": "c"
+        "inet.h": "c",
+        "stdio.h": "c"
     }
 }
