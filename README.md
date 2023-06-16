@@ -276,3 +276,17 @@ int connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len);
 - 客户端输入字符串长度受限
 - 客户端断开后 服务器端没有及时的将连接数相应的减少
 - 客户端结束进程 服务器端仍在连接
+
+### 优雅的断开套接字连接
+
+```c
+#include <sys/sockte.h>
+
+int shutdown(int sock,int howto);
+// 成功返回0 失败返回-1
+//  sock 需要断开套接字的文件描述符
+//  howto   传递断开方式信息
+// SHUT_RD : 断开输入流 。
+// SHUT_WR: 断开输出流 。
+// SHUT_RDWR: 同时断开 1/0流 。
+```
