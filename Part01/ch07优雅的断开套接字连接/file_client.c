@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
     memset(&serv_adr, 0, sizeof(serv_adr));
     serv_adr.sin_family = AF_INET;
     serv_adr.sin_addr.s_addr = inet_addr(argv[1]);
-    serv_adr.sin_port = htons(atoi(argv[0]));
+    serv_adr.sin_port = htons(atoi(argv[2]));
 
     if (connect(sd, (sockaddr *)&serv_adr, sizeof(serv_adr)) == -1) // 调用 connect函数向服务器端发送连接请求。
     {

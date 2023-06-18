@@ -44,8 +44,8 @@ int main(int argc, char const *argv[])
 
     memset(&serv_adr, 0, sizeof(serv_adr));
     serv_adr.sin_family = AF_INET;
-    serv_adr.sin_addr.s_addr = htons(INADDR_ANY);
-    serv_adr.sin_port = (atoi(argv[1]));
+    serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_adr.sin_port = htons(atoi(argv[1]));
 
     if (bind(serv_sd, (sockaddr *)&serv_adr, sizeof(serv_adr)) == -1) // 调用 bind 函数分配IP地址和端口号。
     {
@@ -67,7 +67,6 @@ int main(int argc, char const *argv[])
     while (1)
     {
         read_cnt = fread((void *)buf, 1, BUF_SIZE, fp);
-        printf("read_cnt = %d\n", read_cnt);
         if (read_cnt < BUF_SIZE)
         {
             write(clnt_sd, buf, read_cnt);
@@ -77,7 +76,7 @@ int main(int argc, char const *argv[])
         write(clnt_sd, buf, BUF_SIZE);
     }
 
-    // shutdown(clnt_sd, SHUT_WR);
+    shutdown(clnt_sd, SHUT_WR);
 
     read(clnt_sd, buf, BUF_SIZE);
     printf("Message form client:%s\n", buf);
