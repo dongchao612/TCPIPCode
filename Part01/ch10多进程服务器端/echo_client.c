@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     if (argc != 3)
     {
-        printf("Usage: %s <Ip> <port>\n", argv[0]);
+        printf("Usage: %s  <ip> <port>\n", argv[0]);
         exit(1);
     }
 

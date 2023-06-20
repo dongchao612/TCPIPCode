@@ -10,6 +10,8 @@
         "algorithm": "c",
         "inet.h": "c",
         "stdio.h": "c",
-        "wait.h": "c"
+        "wait.h": "c",
+        "signal.h": "c",
+        "sigaction.h": "c"
     }
 }

@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
     
     if (pid == 0)
     {
-        return 3;
+        return 3;  //结束子进程
     }
     else
     {
@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
         pid = fork();
         if (pid == 0)
         {
-            exit(7);
+            exit(7);//结束子进程
         }
         else
         {
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
             {
                 printf("Child send two: %d \n", WEXITSTATUS(status));
             }
-            sleep(5);
+            sleep(30);
         }
     }
     return 0;

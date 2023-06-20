@@ -12,25 +12,29 @@ int main(int argc, char const *argv[])
     // printf("[%d, %d] \n", gval, lval);// [11, 25]
 
     pid = fork();
-    // printf("pid = %d\n", pid); // 0 ->>子进程
+    printf("pid = %d\n", pid); // 0 ->>子进程
 
     if (pid == 0)
     {
+        printf("%d\t%d\t%d\n",__LINE__,getpid(),getppid());
         gval += 2;
         lval += 2;
     }
     else
     {
+        printf("%d\t%d\t%d\n",__LINE__,getpid(),getppid());
         gval -= 2;
         lval -= 2;
     }
 
     if (pid == 0)
     {
+        printf("%d\t%d\t%d\n",__LINE__,getpid(),getppid());
         printf("Child Proc:[%d, %d] \n", gval, lval);
     }
     else
     {
+        printf("%d\t%d\t%d\n",__LINE__,getpid(),getppid());
         printf("Parent Proc:[%d, %d] \n", gval, lval);
     }
 

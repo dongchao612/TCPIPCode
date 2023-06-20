@@ -11,6 +11,7 @@
 void error_handling(char *message);
 
 typedef struct sockaddr_in sockaddr_in;
+typedef struct sockaddr sockaddr;
 
 int main(int argc, char const *argv[])
 {
@@ -38,15 +39,15 @@ int main(int argc, char const *argv[])
     serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_adr.sin_port = htons(atoi(argv[1]));
 
-    if (bind(serv_sock, (struct sockaddr *)&serv_adr, sizeof(serv_adr)) == -1)
+    if (bind(serv_sock, (sockaddr *)&serv_adr, sizeof(serv_adr)) == -1)
     {
         error_handling("bind() error");
     }
     while (1)
     {
         clent_adr_sz = sizeof(clent_adr);
-        str_len = recvfrom(serv_sock, message, BUF_SIZE, 0, (struct sockaddr *)&clent_adr, &clent_adr_sz);
-        sendto(serv_sock, message, str_len, 0, (struct sockaddr *)&clent_adr, clent_adr_sz);
+        str_len = recvfrom(serv_sock, message, BUF_SIZE, 0, (sockaddr *)&clent_adr, &clent_adr_sz);
+        sendto(serv_sock, message, str_len, 0, (sockaddr *)&clent_adr, clent_adr_sz);
     }
     close(serv_sock);
     return 0;
