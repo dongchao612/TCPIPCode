@@ -13,6 +13,8 @@
         "wait.h": "c",
         "signal.h": "c",
         "sigaction.h": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "in.h": "c",
+        "exception": "c"
     }
 }
