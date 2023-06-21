@@ -12,6 +12,7 @@
         "stdio.h": "c",
         "wait.h": "c",
         "signal.h": "c",
-        "sigaction.h": "c"
+        "sigaction.h": "c",
+        "socket.h": "c"
     }
 }
