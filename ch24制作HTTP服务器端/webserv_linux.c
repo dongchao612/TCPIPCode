@@ -48,16 +48,19 @@ int main(int argc, char *argv[])
     {
         clnt_adr_size = sizeof(clnt_adr);
         clnt_sock = accept(serv_sock, (struct sockaddr *)&clnt_adr, (socklen_t *)&clnt_adr_size);
-        printf("Connection Request : %s:%d\n", inet_ntoa(clnt_adr.sin_addr), ntohs(clnt_adr.sin_port));
+        printf("Connection Request : %s:%d \n", inet_ntoa(clnt_adr.sin_addr), ntohs(clnt_adr.sin_port));
         // request_handler(&clnt_sock);
 
         if (pthread_create(&t_id, NULL, request_handler, &clnt_sock) != 0)
         {
             error_handling("pthread_create() error");
         }
+
         pthread_detach(t_id);
     }
+
     close(serv_sock);
+
     return 0;
 }
 
@@ -80,7 +83,7 @@ void *request_handler(void *arg)
 
     if (strstr(req_line, "HTTP/") == NULL)
     {
-        printf("[%d %s]\n", __LINE__, __FUNCTION__);
+        // printf("[%d %s]\n", __LINE__, __FUNCTION__);
         send_error(clnt_write);
         fclose(clnt_read);
         fclose(clnt_write);
@@ -90,7 +93,7 @@ void *request_handler(void *arg)
     strcpy(method, strtok(req_line, " /"));
     strcpy(file_name, strtok(NULL, " /"));
     strcpy(ct, content_type(file_name));
-    printf("method = %s file_name = %s ct = %s \n", method, file_name, ct);
+    // printf("method = %s file_name = %s ct = %s \n", method, file_name, ct);
     // method = GET file_name = index.html ct = text/html
 
     if (strcmp(method, "GET") != 0)
