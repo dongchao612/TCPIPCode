@@ -22,6 +22,7 @@ int main(int argc, char const *argv[])
     FILE *fp;
     char buf[BUF_SIZE];
     int so_brd = 1;
+    
     if (argc != 3)
     {
         printf("Usage: %s <Boardcast IP> <PORT> \n", argv[0]);
