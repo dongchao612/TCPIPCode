@@ -7,9 +7,19 @@
 ## Part01 开始网络编程
 
 ### ch01 理解网络编程和套接字
+
+在Linux世界里, socket也被认为是文件的一种，因此在网络数据传输过程中自然可以使用文件I/O 的相关函数。
+文件描述符是系统分配给文件或套接字的整数。 实际上, 学习 C语言过程中用过的标准输入输出及标准错误在Linux 中也被分配成文件描述符 。
+
+|文件描述符|对象|
+|:-:|:-:|
+|0|标准输入|
+|1|标准输出|
+|2|标准出错|
+#### 打开文件
+调用此函数时需传递两个参数:第一个参数是打开的目标文件名及路径信息，第二个参数是文件打开模式(文件特性信息)。
 ```c
 // 打开文件
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -20,36 +30,43 @@ int open(const char *path,int flag);
 // flag 文件打开模式信息。
 
 ```
+此函数第二个参数包ag可能的常量值及含义 ， 如需传递多个参数,则应通过位或运算(OR) 符组合并传递 。
 
+|打开模式|含义|
+|:-:|:-:|
+|O_CREATE|必要时创建|
+|O_TRUNC|删除全部现有数据|
+|O_APPEND|维持现有数据，保存到其后面|
+|O_RDONLY|只读打开|
+|O_WRONLY|只写打开|
+|O_RDWR|读写打开|
 ```c
 // 关闭文件
-
 #include <unistd.h>
 int close(int fd);
 // 成功时返回0, 失败时返回-1
-// fd 需要关闭的文件或套接字的文件描述符
+// fd   需要关闭的文件或套接字的文件描述符
 ```
 
 ```c
 // 写入文件
-
 #include <unistd.h>
-ssize_t write (int __fd, const void *__buf, size_t __n);
+ssize_t write (int fd, const void *buf, size_t nbytes);
 // 成功时返回写入字节数, 失败时返回-1
-// fd 显示数据传输对象的文件描述符
-// buf 保存要传输数据的缓冲地址值
-// n 要传输数据的字节数
+// fd   显示数据传输对象的文件描述符
+// buf  保存要传输数据的缓冲地址值
+// nbytes    要传输数据的字节数
 ```
 
 ```c
 // 读取文件
 
 #include <unistd.h>
-ssize_t read (int __fd, void *__buf, size_t __nbytes)
+ssize_t read (int fd, void *buf, size_t nbytes)
 // 成功时返回写入字节数, 失败时返回-1
-// fd 显示数据传输对象的文件描述符
-// buf 保存要传输数据的缓冲地址值
-// nbytes要传输数据的字节数
+// fd   显示数据传输对象的文件描述符
+// buf  保存要传输数据的缓冲地址值
+// nbytes   要传输数据的字节数
 ```
 
 ### ch02 套接字类型与协议设置
@@ -60,25 +77,34 @@ ssize_t read (int __fd, void *__buf, size_t __nbytes)
 #include <sys/socket.h>
 int socket (int __domain, int __type, int __protocol);
 // 成功时返回文件描述符,失败时返回-1
-// domain 套接字中使用的协议族信息
-// - PF_INET4 IPV4互联网协议族
-// - PF_INET6 IPV6互联网协议族
-// - PF_LOCAL 本地通信的UNIX协议族
-// - PF_PACKET 底层套接字的协议族
-// - PF_IPX IPX Novell协议族
-// type 套接字数据传输类型信息
-// - 面向连接的套接字(SOCK_STREAM)
-//    传输过程中数据不会消失
-//    按序传输数据
-//    传输过程中不存在数据边界
-// - 面向消息的套接字(SOCK_DGRAM)
-//    强调快速传输而非传输顺序
-//    传输的数据可能丢失也可能损毁 。
-//    传输的数据有数据边界
-//    限制每次传输 的数据大小 。
+// domain   套接字中使用的协议族信息
+// type     套接字数据传输类型信息
 // protocol 计算机间通信中使用的协议
 ```
+#### 协议族
+通过socket函数的第一个参数传递套接字中使用的协议分类信息 ，此协议分类信息称为协议族,可分成如下几类：
+|名称|协议族|
+|:-:|:-:|
+|PF_INET4|IPV4互联网协议族|
+|PF_INET6|IPV6互联网协议族|
+|PF_LOCAL|本地通信的UNIX协议族|
+|PF_PACKET|底层套接字的协议族|
+|PF_IPX|IPX Novell协议族|
+#### 套接字类型 
+套接字类型指 的是套接字 的数据传输方式，通过socket函数的第二个参数传递,只有这样才能决定创建的套接字的数据传输方式。
 
+1. 面向连接的套接字(SOCK_STREAM)
+- 传输过程中数据不会消失
+- 按序传输数据
+- 传输过程中不存在数据边界
+
+
+1. 面向消息的套接字(SOCK_DGRAM)
+- 强调快速传输而非传输顺序
+- 传输的数据可能丢失也可能损毁 。
+- 传输的数据有数据边界
+- 限制每次传输 的数据大小 。
+- 
 ### ch03 地址族与数据序列
 #### 网络地址
 IPv4标准的4字节F地址分为网络地址和主机(指计算机)地址, 且分为A 、B 、 C 、 D 、 E等类型
@@ -93,15 +119,20 @@ IPv4标准的4字节F地址分为网络地址和主机(指计算机)地址, 且�
 ```c
 struct sockaddr_in
 {
-    sa_family_t sin_family              // 地址族 ->> unsigned short int 
-    // AF_INET IPv4网络协议中使用的地址族
-    // AF_INET6 IPv6网络协议中使用的地址族
-    in_port_t sin_port;			// 16位TCP/UDP端口号   ->> uint16_t
-    struct in_addr sin_addr;		// 32为IP地址  ->> uint32_t
-
+    sa_family_t sin_family              // 地址族
+    in_port_t sin_port;			// 16位TCP/UDP端口号
+    struct in_addr sin_addr;		// 32为IP地址 
     char sin_zero[9]                    // 不使用
 };
+```
+每种协议族适用的地址族均不同 。 比如, IPv4使用4字节地址族, IPv6使用 16字节地址族 。
+| 地址族|含义|
+|:-:|:-:|
+|AF_INET |IPv4网络协议中使用的地址族|
+|AF_INET6 |IPv6网络协议中使用的地址族|
+|AP_LOCAL |本地通信中采用的UNIX协议的地址族|
 
+```c
 struct in_addr
 {
     In_addr_t s_addr;                   //32位IPv4地址 ->> uint32_t

@@ -13,15 +13,15 @@ typedef struct sockaddr sockaddr;
 
 int main(int argc, char *argv[])
 {
-    int clnt_sock;                      // 客户端套接字
-    sockaddr_in serv_addr;  // 客户端地址
+    int clnt_sock;         // 客户端套接字
+    sockaddr_in serv_addr; // 客户端地址
 
     char message[30];
     int str_len;
 
     if (argc != 3)
     {
-        printf("Usage: %s <ip> <port>\n", argv[0]);
+        printf("Usage : %s <ip> <port> \n", argv[0]);
         exit(1);
     }
 
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
-    serv_addr.sin_port = (atoi(argv[2]));
+    serv_addr.sin_port = htons(atoi(argv[2]));
 
     if (connect(clnt_sock, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) // 调用 connect函数向服务器端发送连接请求。
     {
@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
     }
 
     str_len = read(clnt_sock, message, sizeof(message) - 1);
-
     if (str_len == -1)
     {
         error_handing("read() error");
@@ -55,7 +54,6 @@ int main(int argc, char *argv[])
 }
 void error_handing(char *message)
 {
-    fputs(message, stderr);
-    fputc('\n', stderr);
+    perror(message);
     exit(1);
 }

@@ -22,13 +22,12 @@ int main()
     }
     else
     {
-        printf("Network orderd integer addr :%#x \n", addr_inet.sin_addr.s_addr); //0x4f7ce87f 
+        printf("Network orderd integer addr :%#x \n", addr_inet.sin_addr.s_addr); // 0x4f7ce87f
     }
 }
 
 void error_handing(char *message)
 {
-    fputs(message, stderr);
-    fputc('\n', stderr);
+    perror(message);
     exit(1);
 }

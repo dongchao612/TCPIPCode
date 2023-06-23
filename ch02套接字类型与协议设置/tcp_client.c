@@ -17,13 +17,13 @@ int main(int argc, char *argv[])
     sockaddr_in serv_addr; // 客户端地址
 
     char message[30];
-    int str_len=0;
+    int str_len = 0;
 
     int idx = 0, read_len = 0;
 
     if (argc != 3)
     {
-        printf("Usage: %s <port>\n", argv[0]);
+        printf("Usage : %s <ip> <port> \n", argv[0]);
         exit(1);
     }
 
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = inet_addr(argv[1]);
-    serv_addr.sin_port = (atoi(argv[2]));
+    serv_addr.sin_port =htons (atoi(argv[2]));
 
     if (connect(clnt_sock, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) // 调用 connect函数向服务器端发送连接请求。
     {
@@ -52,9 +52,8 @@ int main(int argc, char *argv[])
         str_len += read_len;
     }
 
-
     printf("Message from server : %s \n", message);
-    printf("Function read acll count : %d \n", str_len);
+    printf("Function read call count : %d \n", str_len);
 
     close(clnt_sock);
 

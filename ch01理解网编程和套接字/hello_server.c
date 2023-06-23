@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     if (argc != 2)
     {
-        printf("Usage: %s <ip> <port>\n", argv[0]);
+        printf("Usage : %s <port> \n", argv[0]);
         exit(1);
     }
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htons(INADDR_ANY);
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(atoi(argv[1]));
 
     if (bind(serv_sock, (sockaddr *)&serv_addr, sizeof(serv_addr)) == -1) // 调用 bind 函数分配IP地址和端口号。
@@ -58,8 +58,8 @@ int main(int argc, char *argv[])
         error_handing("accept() error");
     }
 
-    write(clnt_sock, message, sizeof(message)); // 稍后将要介绍的 write 函数用 于传输数据
-    
+    write(clnt_sock, message, sizeof(message)); //  write 函数用 于传输数据
+
     close(clnt_sock);
     close(serv_sock);
 
@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
 }
 void error_handing(char *message)
 {
-    fputs(message, stderr);
-    fputc('\n', stderr);
+    perror(message);
     exit(1);
 }

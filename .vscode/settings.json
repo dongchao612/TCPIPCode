@@ -15,6 +15,7 @@
         "sigaction.h": "c",
         "socket.h": "c",
         "in.h": "c",
-        "exception": "c"
+        "exception": "c",
+        "pthread.h": "c"
     }
 }

@@ -17,10 +17,10 @@ int main()
     }
     else
     {
-        printf("Network orderd integer addr :%#lx \n", conv_addr);// 0x4030201 
+        printf("Network orderd integer addr :%#lx \n", conv_addr); // 0x4030201
     }
 
-    conv_addr = inet_addr(addr2); //error occured!
+    conv_addr = inet_addr(addr2); // error occured!
     if (conv_addr == INADDR_NONE)
     {
         printf("error occured!\n");
